@@ -2,16 +2,19 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SDBISAutomationSolution
 {
     [TestClass]
-    public class UnitTest1
+    public class LoginTests
     {
         private IWebDriver driver;
         private LoginPage loginPage;
-
 
         [TestInitialize]
         public void TestInitialize()
@@ -30,14 +33,9 @@ namespace SDBISAutomationSolution
         }
 
         [TestMethod]
-        public void UserShouldLoginSuccessfully ()
+        public void UserShouldLoginSuccessfully()
         {
-            //fill email
-            driver.FindElement(By.CssSelector("input[data-test=email]")).SendKeys("test@test.test");
-            //fill password
-            driver.FindElement(By.XPath("//input[@placeholder='Password']")).SendKeys("test");
-            //click signin button
-            driver.FindElement(By.Name("commit")).Click();
+            loginPage.LoginApplication("test@test.test", "test");
             //assert logged in email
             Assert.IsTrue(driver.FindElement(By.XPath("//span[@data-test='current-user']")).Text.Equals("test@test.test"));
         }
@@ -45,27 +43,17 @@ namespace SDBISAutomationSolution
         [TestMethod]
         public void UserShouldFailLoginWithWrongEmail()
         {
-            //fill email
-            driver.FindElement(By.CssSelector("input[data-test=email]")).SendKeys("wrongEmail@test.test");
-            //fill password
-            driver.FindElement(By.XPath("//input[@placeholder='Password']")).SendKeys("test");
-            //click signin button
-            driver.FindElement(By.Name("commit")).Click();
+            loginPage.LoginApplication("wrongEmail@test.test", "test");
             //assert logged in email
-            Assert.IsTrue(driver.FindElement(By.XPath("/html/body/div/div[1]")).Text.Equals("Bad email or password."));
+            Assert.IsTrue(loginPage.ErrorMessage.Equals("Bad email or password."));
         }
 
         [TestMethod]
         public void UserShouldFailLoginWithWrongPassword()
         {
-            //fill email
-            driver.FindElement(By.CssSelector("input[data-test=email]")).SendKeys("test@test.test");
-            //fill password
-            driver.FindElement(By.XPath("//input[@placeholder='Password']")).SendKeys("wrongPassword");
-            //click signin button
-            driver.FindElement(By.Name("commit")).Click();
+            loginPage.LoginApplication("test@test.test", "wrongPassword");
             //assert logged in email
-            Assert.IsTrue(driver.FindElement(By.XPath("/html/body/div/div[1]")).Text.Equals("Bad email or password."));
+            Assert.IsTrue(loginPage.ErrorMessage.Equals("Bad email or password."));
         }
 
         [TestCleanup]
