@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using SDBISAutomationSolution.PageObjects.AddAddress;
+using SDBISAutomationSolution.PageObjects.Home;
 using SDBISAutomationSolution.PageObjects.Login;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,10 @@ using System.Threading.Tasks;
 namespace SDBISAutomationSolution
 {
     [TestClass]
-    public class LoginTests
+    public class AddAddressTests
     {
         private IWebDriver driver;
-        private LoginPage loginPage;
+        private AddAddressPage addAddressPage;
 
         [TestInitialize]
         public void TestInitialize()
@@ -30,31 +32,20 @@ namespace SDBISAutomationSolution
             var btnSignIn = driver.FindElement(By.Id("sign-in"));
             btnSignIn.Click();
             Thread.Sleep(2000);
-            loginPage = new LoginPage(driver);
-        }
-
-        [TestMethod]
-        public void UserShouldLoginSuccessfully()
-        {
+            var loginPage = new LoginPage(driver);
             loginPage.LoginApplication("test@test.test", "test");
-            //assert logged in email
-            Assert.IsTrue(driver.FindElement(By.XPath("//span[@data-test='current-user']")).Text.Equals("test@test.test"));
+            var homePage = new HomePage(driver);
+            var addressesOverviewPage = homePage.NavigateToAddressesPage();
+            Thread.Sleep(2000);
+            addAddressPage = addressesOverviewPage.NavigateToAddAddressPage();
+            Thread.Sleep(2000);
         }
 
         [TestMethod]
-        public void UserShouldFailLoginWithWrongEmail()
+        public void ShouldAddAddressSuccessfully()
         {
-            loginPage.LoginApplication("wrongEmail@test.test", "test");
-            //assert logged in email
-            Assert.IsTrue(loginPage.ErrorMessage.Equals("Bad email or password."));
-        }
 
-        [TestMethod]
-        public void UserShouldFailLoginWithWrongPassword()
-        {
-            loginPage.LoginApplication("test@test.test", "wrongPassword");
-            //assert logged in email
-            Assert.IsTrue(loginPage.ErrorMessage.Equals("Bad email or password."));
+            addAddressPage.CreateAddress("SDBIS name", "SDBIS lastname", "SDBIS address1", "SDBIS city", "SDBIS zipcode");
         }
 
         [TestCleanup]

@@ -2,7 +2,7 @@
 
 using OpenQA.Selenium;
 
-namespace SDBISAutomationSolution
+namespace SDBISAutomationSolution.PageObjects.Login
 {
     public class LoginPage
     {
