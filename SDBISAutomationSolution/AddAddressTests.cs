@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using SDBISAutomationSolution.PageObjects.AddAddress;
+using SDBISAutomationSolution.PageObjects.AddAddress.InputData;
 using SDBISAutomationSolution.PageObjects.Home;
 using SDBISAutomationSolution.PageObjects.Login;
 using System;
@@ -43,8 +44,19 @@ namespace SDBISAutomationSolution
         [TestMethod]
         public void ShouldAddAddressSuccessfully()
         {
-
-            addAddressPage.CreateAddress("SDBIS name", "SDBIS lastname", "SDBIS address1", "SDBIS city", "California", "SDBIS zipcode");
+            var inputData = new AddAddressBO
+            {
+                //FirstName = "SDBIS name",
+                LastName = "SDBIS lastname",
+                Address1 = "SDBIS address1",
+                City = "SDBIS city",
+                State = "California",
+                ZipCode = "SDBIS zipcode",
+                Country = "Canada",
+                Color = "#FF0000"
+            };
+            var addressDetailsPage = addAddressPage.CreateAddress(inputData);
+            Assert.AreEqual("Address was successfully created.", addressDetailsPage.NoticeText);
         }
 
         [TestCleanup]
