@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,18 +29,25 @@ namespace SDBISAutomationSolution.PageObjects.AddAddress
         private IWebElement TxtCity =>
             driver.FindElement(By.Id("address_city"));
 
+        private IWebElement DdlStates =>
+            driver.FindElement(By.Id("address_state"));
+
         private IWebElement TxtZipCode =>
             driver.FindElement(By.Id("address_zip_code"));
 
         private IWebElement BtnCreateAddress =>
             driver.FindElement(By.CssSelector("input[name=commit]"));
 
-        public void CreateAddress(string firstName, string lastName, string address1, string city, string zipcode)
+        public void CreateAddress(string firstName, string lastName, string address1, string city, string stateName, string zipcode)
         {
             TxtFirstName.SendKeys(firstName);
             TxtLastName.SendKeys(lastName);
             TxtAddress1.SendKeys(address1);
             TxtCity.SendKeys(city);
+
+            var state = new SelectElement(DdlStates);
+            state.SelectByText(stateName);
+
             TxtZipCode.SendKeys(zipcode);
             BtnCreateAddress.Click();
         }

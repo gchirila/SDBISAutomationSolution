@@ -33,8 +33,7 @@ namespace SDBISAutomationSolution
             btnSignIn.Click();
             Thread.Sleep(2000);
             var loginPage = new LoginPage(driver);
-            loginPage.LoginApplication("test@test.test", "test");
-            var homePage = new HomePage(driver);
+            var homePage = loginPage.LoginApplication("test@test.test", "test");
             var addressesOverviewPage = homePage.NavigateToAddressesPage();
             Thread.Sleep(2000);
             addAddressPage = addressesOverviewPage.NavigateToAddAddressPage();
@@ -45,7 +44,7 @@ namespace SDBISAutomationSolution
         public void ShouldAddAddressSuccessfully()
         {
 
-            addAddressPage.CreateAddress("SDBIS name", "SDBIS lastname", "SDBIS address1", "SDBIS city", "SDBIS zipcode");
+            addAddressPage.CreateAddress("SDBIS name", "SDBIS lastname", "SDBIS address1", "SDBIS city", "California", "SDBIS zipcode");
         }
 
         [TestCleanup]

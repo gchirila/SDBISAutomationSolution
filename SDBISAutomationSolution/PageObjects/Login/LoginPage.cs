@@ -1,6 +1,7 @@
 ﻿
 
 using OpenQA.Selenium;
+using SDBISAutomationSolution.PageObjects.Home;
 
 namespace SDBISAutomationSolution.PageObjects.Login
 {
@@ -23,11 +24,12 @@ namespace SDBISAutomationSolution.PageObjects.Login
         //login fail error label
         private IWebElement LblErrorMessage => driver.FindElement(By.XPath("/html/body/div/div[1]"));
 
-        public void LoginApplication(string email, string password)
+        public HomePage LoginApplication(string email, string password)
         {
             TxtEmail.SendKeys(email);
             TxtPassword.SendKeys(password);
             BtnLogin.Click();
+            return new HomePage(driver);
         }
 
         public string ErrorMessage => LblErrorMessage.Text;
