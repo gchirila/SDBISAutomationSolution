@@ -46,7 +46,7 @@ namespace SDBISAutomationSolution.PageObjects.AddAddress
         private IWebElement BtnCreateAddress =>
             driver.FindElement(By.CssSelector("input[name=commit]"));
 
-        public AddressDetails CreateAddress(AddAddressBO inputData)
+        public AddressDetailsPage CreateAddress(AddAddressBO inputData)
         {
             TxtFirstName.SendKeys(inputData.FirstName);
             TxtLastName.SendKeys(inputData.LastName);
