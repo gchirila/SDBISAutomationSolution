@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace SDBISAutomationSolution.PageObjects.AddAddress
 {
-    public class AddAddressPage
+    public class AddEditAddressPage
     {
         private IWebDriver driver;
 
-        public AddAddressPage(IWebDriver _driver)
+        public AddEditAddressPage(IWebDriver _driver)
         {
             driver = _driver;
         }
@@ -43,9 +43,11 @@ namespace SDBISAutomationSolution.PageObjects.AddAddress
         private IWebElement BtnCreateAddress =>
             driver.FindElement(By.CssSelector("input[name=commit]"));
 
-        public AddressDetailsPage CreateAddress(AddAddressBO inputData)
+        public AddressDetailsPage CreateEditAddress(AddAddressBO inputData)
         {
+            TxtFirstName.Clear();
             TxtFirstName.SendKeys(inputData.FirstName);
+            TxtLastName.Clear();
             TxtLastName.SendKeys(inputData.LastName);
             TxtAddress1.SendKeys(inputData.Address1);
             TxtCity.SendKeys(inputData.City);

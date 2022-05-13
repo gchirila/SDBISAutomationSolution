@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SDBISAutomationSolution.PageObjects.AddressesOverview;
 
 namespace SDBISAutomationSolution
 {
@@ -18,7 +19,8 @@ namespace SDBISAutomationSolution
     public class AddAddressTests
     {
         private IWebDriver driver;
-        private AddAddressPage addAddressPage;
+        private AddEditAddressPage addAddressPage;
+        private AddressesOverviewPage addressesOverviewPage;
 
         [TestInitialize]
         public void TestInitialize()
@@ -35,10 +37,9 @@ namespace SDBISAutomationSolution
             Thread.Sleep(2000);
             var loginPage = new LoginPage(driver);
             var homePage = loginPage.LoginApplication("test@test.test", "test");
-            var addressesOverviewPage = homePage.NavigateToAddressesPage();
+            addressesOverviewPage = homePage.menuItemControlLoggedIn.NavigateToAddressesPage();
             Thread.Sleep(2000);
-            addAddressPage = addressesOverviewPage.NavigateToAddAddressPage();
-            Thread.Sleep(2000);
+            
         }
 
         [TestMethod]
@@ -55,8 +56,41 @@ namespace SDBISAutomationSolution
                 Country = "Canada",
                 Color = "#FF0000"
             };
-            var addressDetailsPage = addAddressPage.CreateAddress(inputData);
+            addAddressPage = addressesOverviewPage.NavigateToAddAddressPage();
+            Thread.Sleep(2000);
+            var addressDetailsPage = addAddressPage.CreateEditAddress(inputData);
             Assert.AreEqual("Address was successfully created.", addressDetailsPage.NoticeText);
+        }
+
+        [TestMethod]
+        public void ShouldEditAddressSuccessfully()
+        {
+            var inputData = new AddAddressBO
+            {
+                FirstName = "Pretty please don't edit/delete",
+                LastName = "SDBIS lastname",
+                Address1 = "SDBIS address1",
+                City = "SDBIS city",
+                State = "California",
+                ZipCode = "SDBIS zipcode",
+                Country = "Canada",
+                Color = "#FF0000"
+            };
+            addAddressPage = addressesOverviewPage.NavigateToEditAddressPage(inputData.FirstName);
+            Thread.Sleep(4000);
+            var addressDetailsPage = addAddressPage.CreateEditAddress(inputData);
+            Thread.Sleep(2000);
+            Assert.AreEqual("Address was successfully updated.", addressDetailsPage.NoticeText);
+        }
+
+        [TestMethod]
+        public void ShouldDemoAlert()
+        {
+            var inputData = new AddAddressBO
+            {
+                FirstName = "Pretty please don't edit/delete"
+            };
+            addressesOverviewPage.DeleteAddress(inputData.FirstName);
         }
 
         [TestCleanup]

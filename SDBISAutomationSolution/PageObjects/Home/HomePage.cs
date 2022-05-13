@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SDBISAutomationSolution.Shared.MenuItemControl;
 
 namespace SDBISAutomationSolution.PageObjects.Home
 {
@@ -17,13 +18,7 @@ namespace SDBISAutomationSolution.PageObjects.Home
             driver = _driver;
         }
 
-        private IWebElement BtnAddresses => 
-            driver.FindElement(By.CssSelector("a[data-test=addresses]"));
-
-        public AddressesOverviewPage NavigateToAddressesPage()
-        {
-            BtnAddresses.Click();
-            return new AddressesOverviewPage(driver);
-        }
+        public MenuItemControlLoggedIn menuItemControlLoggedIn =>
+            new MenuItemControlLoggedIn(driver);
     }
 }

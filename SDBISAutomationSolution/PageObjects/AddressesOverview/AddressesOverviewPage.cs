@@ -25,16 +25,29 @@ namespace SDBISAutomationSolution.PageObjects.AddressesOverview
 
         private IWebElement BtnEdit(string addressName) =>
             LstAddresses.FirstOrDefault(element => element.Text.Contains(addressName))
-                .FindElement(By.CssSelector(""));
+                .FindElement(By.CssSelector("a[data-test*=edit]"));
 
         private IWebElement BtnDelete(string addressName) =>
             LstAddresses.FirstOrDefault(element => element.Text.Contains(addressName))
-                .FindElement(By.CssSelector(""));
+                .FindElement(By.CssSelector("a[data-method=delete]"));
 
-        public AddAddressPage NavigateToAddAddressPage()
+        public void DeleteAddress(string addressName)
+        {
+            BtnDelete(addressName).Click();
+            driver.SwitchTo().Alert().Dismiss();
+        }
+
+        public AddEditAddressPage NavigateToEditAddressPage(string addressName)
+        {
+            BtnEdit(addressName).Click();
+            return new AddEditAddressPage(driver);
+        }
+
+
+        public AddEditAddressPage NavigateToAddAddressPage()
         {
             BtnNewAddress.Click();
-            return new AddAddressPage(driver);
+            return new AddEditAddressPage(driver);
         }
     }
 }
