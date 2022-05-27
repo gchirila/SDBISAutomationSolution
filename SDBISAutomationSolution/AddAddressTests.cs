@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SDBISAutomationSolution.PageObjects.AddressesOverview;
+using SDBISAutomationSolution.Shared.MenuItemControl;
 
 namespace SDBISAutomationSolution
 {
@@ -32,14 +33,10 @@ namespace SDBISAutomationSolution
             //navigate to app URL
             driver.Navigate().GoToUrl("http://a.testaddressbook.com/");
             //click sign in button
-            var btnSignIn = driver.FindElement(By.Id("sign-in"));
-            btnSignIn.Click();
-            Thread.Sleep(2000);
-            var loginPage = new LoginPage(driver);
+            var menuItemControl = new MenuItemControlLoggedOut(driver);
+            var loginPage = menuItemControl.NavigateToLoginPage();
             var homePage = loginPage.LoginApplication("test@test.test", "test");
             addressesOverviewPage = homePage.menuItemControlLoggedIn.NavigateToAddressesPage();
-            Thread.Sleep(2000);
-            
         }
 
         [TestMethod]
@@ -57,7 +54,6 @@ namespace SDBISAutomationSolution
                 Color = "#FF0000"
             };
             addAddressPage = addressesOverviewPage.NavigateToAddAddressPage();
-            Thread.Sleep(2000);
             var addressDetailsPage = addAddressPage.CreateEditAddress(inputData);
             Assert.AreEqual("Address was successfully created.", addressDetailsPage.NoticeText);
         }
@@ -77,9 +73,7 @@ namespace SDBISAutomationSolution
                 Color = "#FF0000"
             };
             addAddressPage = addressesOverviewPage.NavigateToEditAddressPage(inputData.FirstName);
-            Thread.Sleep(4000);
             var addressDetailsPage = addAddressPage.CreateEditAddress(inputData);
-            Thread.Sleep(2000);
             Assert.AreEqual("Address was successfully updated.", addressDetailsPage.NoticeText);
         }
 

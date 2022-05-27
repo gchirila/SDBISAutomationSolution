@@ -4,6 +4,7 @@ using SDBISAutomationSolution.PageObjects.AddAddress.InputData;
 using SDBISAutomationSolution.PageObjects.AddressDetails;
 using System.Collections.Generic;
 using System.Linq;
+using SDBISAutomationSolution.Utils;
 
 namespace SDBISAutomationSolution.PageObjects.AddAddress
 {
@@ -16,8 +17,9 @@ namespace SDBISAutomationSolution.PageObjects.AddAddress
             driver = _driver;
         }
 
+        private By FirstName = By.Id("address_first_name");
         private IWebElement TxtFirstName =>
-            driver.FindElement(By.Id("address_first_name"));
+            driver.FindElement(FirstName);
 
         private IWebElement TxtLastName =>
             driver.FindElement(By.Id("address_last_name"));
@@ -45,6 +47,7 @@ namespace SDBISAutomationSolution.PageObjects.AddAddress
 
         public AddressDetailsPage CreateEditAddress(AddAddressBO inputData)
         {
+            driver.WaitForElement(FirstName);
             TxtFirstName.Clear();
             TxtFirstName.SendKeys(inputData.FirstName);
             TxtLastName.Clear();

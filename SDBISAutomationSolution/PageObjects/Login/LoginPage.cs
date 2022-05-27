@@ -2,6 +2,7 @@
 
 using OpenQA.Selenium;
 using SDBISAutomationSolution.PageObjects.Home;
+using SDBISAutomationSolution.Utils;
 
 namespace SDBISAutomationSolution.PageObjects.Login
 {
@@ -16,7 +17,9 @@ namespace SDBISAutomationSolution.PageObjects.Login
         }
 
         //email textbox
-        private IWebElement TxtEmail => driver.FindElement(By.CssSelector("input[data-test=email]"));
+        private By Email = By.CssSelector("input[data-test=email]");
+        private IWebElement TxtEmail =>
+            driver.FindElement(Email);
         //password textbox
         private IWebElement TxtPassword => driver.FindElement(By.XPath("//input[@placeholder='Password']"));
         //login button
@@ -26,6 +29,7 @@ namespace SDBISAutomationSolution.PageObjects.Login
 
         public HomePage LoginApplication(string email, string password)
         {
+            driver.WaitForElement(Email);
             TxtEmail.SendKeys(email);
             TxtPassword.SendKeys(password);
             BtnLogin.Click();

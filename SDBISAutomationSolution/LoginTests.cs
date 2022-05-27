@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SDBISAutomationSolution.Shared.MenuItemControl;
 
 namespace SDBISAutomationSolution
 {
@@ -27,10 +28,9 @@ namespace SDBISAutomationSolution
             //navigate to app URL
             driver.Navigate().GoToUrl("http://a.testaddressbook.com/");
             //click sign in button
-            var btnSignIn = driver.FindElement(By.Id("sign-in"));
-            btnSignIn.Click();
-            Thread.Sleep(2000);
-            loginPage = new LoginPage(driver);
+            var menuItemControl = new MenuItemControlLoggedOut(driver);
+            
+            loginPage = menuItemControl.NavigateToLoginPage();
         }
 
         [TestMethod]

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SDBISAutomationSolution.Utils;
 
 namespace SDBISAutomationSolution.PageObjects.AddressesOverview
 {
@@ -20,8 +21,9 @@ namespace SDBISAutomationSolution.PageObjects.AddressesOverview
         private IList<IWebElement> LstAddresses =>
             driver.FindElements(By.CssSelector("tbody tr"));
 
+        private By NewAddress = By.XPath("//a[@data-test='create']");
         private IWebElement BtnNewAddress =>
-            driver.FindElement(By.XPath("//a[@data-test='create']"));
+            driver.FindElement(NewAddress);
 
         private IWebElement BtnEdit(string addressName) =>
             LstAddresses.FirstOrDefault(element => element.Text.Contains(addressName))
@@ -33,12 +35,14 @@ namespace SDBISAutomationSolution.PageObjects.AddressesOverview
 
         public void DeleteAddress(string addressName)
         {
+            driver.WaitForElement(NewAddress);
             BtnDelete(addressName).Click();
             driver.SwitchTo().Alert().Dismiss();
         }
 
         public AddEditAddressPage NavigateToEditAddressPage(string addressName)
         {
+            driver.WaitForElement(NewAddress);
             BtnEdit(addressName).Click();
             return new AddEditAddressPage(driver);
         }
@@ -46,6 +50,7 @@ namespace SDBISAutomationSolution.PageObjects.AddressesOverview
 
         public AddEditAddressPage NavigateToAddAddressPage()
         {
+            driver.WaitForElement(NewAddress);
             BtnNewAddress.Click();
             return new AddEditAddressPage(driver);
         }
