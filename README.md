@@ -593,62 +593,82 @@ And the methods could be called in test classes:
 ```csharp
 
 		[TestClass]
-	    public class AddressesTest
-	    {
-	        private IWebDriver driver;
-	        private AddressesPage addressesPage;
-	
-	        [TestInitialize]
-	        public void SetUp()
-	        {
-	            driver = new ChromeDriver();
-	            
-	            driver.Manage().Window.Maximize();
-	            driver.Navigate().GoToUrl("http://a.testaddressbook.com/");
-	            var loginPage = new LoginPage(driver);
-	            loginPage.menuItemControl.NavigateToLoginPage();
-	            loginPage.LoginApplication("test@test.test", "test");
-	
-	            var homePage = new HomePage(driver);
-	            //Implicit Wait
-	            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
-	
-	            addressesPage = homePage.NavigateToAddressesPage();
-	            var addAddressPage = addressesPage.NavigateToAddAddressPage();
-	            addAddressPage.AddAddress(new AddAddressBO());
-	            var addressDetails =  addAddressPage.NavigateToAddressDetailsPage();
-	            addressesPage = addressDetails.NavigateToAddressesPage();
-	        }
-	
-	        [TestMethod]
-	        public void Should_Delete_Address_V1()
-	        {
-	            addressesPage.DeleteAddress1();
-	            string notice = "Address was successfully destroyed.";
-	            Assert.AreEqual(notice, addressesPage.NoticeText);
-	        }
-	
-	        [TestMethod]
-	        public void Should_Delete_Address_V2()
-	        {
-	            addressesPage.DeleteAddressV2(new AddAddressBO());
-	            string notice = "Address was successfully destroyed.";
-	            Assert.AreEqual(notice, addressesPage.NoticeText);
-	        }
-	
-	        [TestMethod]
-	        public void Should_Delete_Address_V3()
-	        {
-	            addressesPage.DeleteAddressV3();
-	            string notice = "Address was successfully destroyed.";
-	            Assert.AreEqual(notice, addressesPage.NoticeText);
-	        }
-	
-	        [TestCleanup]
-	        public void CleanUp()
-	        {
-	            driver.Quit();
-	        }
+    public class AddAddressTests
+    {
+        private IWebDriver driver;
+        private AddEditAddressPage addAddressPage;
+        private AddressesOverviewPage addressesOverviewPage;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            //open browser
+            driver = new ChromeDriver();
+            //maximize window
+            driver.Manage().Window.Maximize();
+            //navigate to app URL
+            driver.Navigate().GoToUrl("http://a.testaddressbook.com/");
+            //click sign in button
+            var menuItemControl = new MenuItemControlLoggedOut(driver);
+            var loginPage = menuItemControl.NavigateToLoginPage();
+            var homePage = loginPage.LoginApplication("test@test.test", "test");
+            addressesOverviewPage = homePage.menuItemControlLoggedIn.NavigateToAddressesPage();
+        }
+
+        [TestMethod]
+        public void ShouldAddAddressSuccessfully()
+        {
+            var inputData = new AddAddressBO
+            {
+                //FirstName = "SDBIS name",
+                LastName = "SDBIS lastname",
+                Address1 = "SDBIS address1",
+                City = "SDBIS city",
+                State = "California",
+                ZipCode = "SDBIS zipcode",
+                Country = "Canada",
+                Color = "#FF0000"
+            };
+            addAddressPage = addressesOverviewPage.NavigateToAddAddressPage();
+            var addressDetailsPage = addAddressPage.CreateEditAddress(inputData);
+            Assert.AreEqual("Address was successfully created.", addressDetailsPage.NoticeText);
+        }
+
+        [TestMethod]
+        public void ShouldEditAddressSuccessfully()
+        {
+            var inputData = new AddAddressBO
+            {
+                FirstName = "Pretty please don't edit/delete",
+                LastName = "SDBIS lastname",
+                Address1 = "SDBIS address1",
+                City = "SDBIS city",
+                State = "California",
+                ZipCode = "SDBIS zipcode",
+                Country = "Canada",
+                Color = "#FF0000"
+            };
+            addAddressPage = addressesOverviewPage.NavigateToEditAddressPage(inputData.FirstName);
+            var addressDetailsPage = addAddressPage.CreateEditAddress(inputData);
+            Assert.AreEqual("Address was successfully updated.", addressDetailsPage.NoticeText);
+        }
+
+        [TestMethod]
+        public void ShouldDemoAlert()
+        {
+            var inputData = new AddAddressBO
+            {
+                FirstName = "Pretty please don't edit/delete"
+            };
+            addressesOverviewPage.DeleteAddress(inputData.FirstName);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            driver.Quit();
+        }
+    }
 			
 ```
 
